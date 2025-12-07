@@ -11,7 +11,7 @@ function TopBar () {
       <AppBar className="topbar-appBar" position="absolute">
         <Toolbar>
           <Typography variant="h5" color="inherit">
-            This is the TopBar component
+            Nguyễn Văn Hùng
           </Typography>
         </Toolbar>
       </AppBar>

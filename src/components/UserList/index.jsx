@@ -1,7 +1,9 @@
 import React from "react";
+import {Link} from "react-router-dom"
 import {
   Divider,
   List,
+  Button,
   ListItem,
   ListItemText,
   Typography,
@@ -24,18 +26,20 @@ function UserList () {
           display your users like so:
         </Typography>
         <List component="nav">
-          {users.map((item) => (
-            <>
-              <ListItem>
-                      <ListItemText primary={item.first_name}/>
+          {users.map((item)=>(
+            <React.Fragment key={item._id}>
+              <ListItem
+              button
+              component={Link}
+              to={`/users/${item._id}`}>
+                <ListItemText
+                primary={`${item.first_name} ${item.last_name}`}
+                />
               </ListItem>
               <Divider />
-            </>
+            </React.Fragment>
           ))}
         </List>
-        <Typography variant="body1">
-          The model comes in from models.userListModel()
-        </Typography>
       </div>
     );
 }
