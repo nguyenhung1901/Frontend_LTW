@@ -11,10 +11,6 @@ function UserPhotos () {
     const user = models.userModel(userId);
     return (
       <>
-      <Typography variant="h5">
-        Photos of {user.first_name} {user.last_name} ({user.location})
-      </Typography>
-      <Divider />
       {photos.map((photo)=>(
         <React.Fragment key={photo._id}>
           <Card>
