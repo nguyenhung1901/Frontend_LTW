@@ -1,47 +1,46 @@
-import React from "react";
-import {Link} from "react-router-dom"
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Divider,
   List,
-  Button,
   ListItem,
   ListItemText,
   Typography,
 } from "@mui/material";
 
-import "./styles.css";
-import models from "../../modelData/models";
+function UserList() {
+  const [users, setUsers] = useState([]);
 
-/**
- * Define UserList, a React component of Project 4.
- */
-function UserList () {
-    const users = models.userListModel();
-    return (
-      <div>
-        <Typography variant="body1">
-          This is the user list, which takes up 3/12 of the window. You might
-          choose to use <a href="https://mui.com/components/lists/">Lists</a>{" "}
-          and <a href="https://mui.com/components/dividers/">Dividers</a> to
-          display your users like so:
-        </Typography>
-        <List component="nav">
-          {users.map((item)=>(
-            <React.Fragment key={item._id}>
-              <ListItem
+  useEffect(() => {
+    fetch("http://localhost:8081/api/user/list")
+      .then(res => res.json())
+      .then(data => setUsers(data))
+      .catch(err => console.error(err));
+  }, []);
+
+  return (
+    <div>
+      <Typography variant="body1">
+        User list
+      </Typography>
+      <List component="nav">
+        {users.map(user => (
+          <React.Fragment key={user._id}>
+            <ListItem
               button
               component={Link}
-              to={`/users/${item._id}`}>
-                <ListItemText
-                primary={`${item.first_name} ${item.last_name}`}
-                />
-              </ListItem>
-              <Divider />
-            </React.Fragment>
-          ))}
-        </List>
-      </div>
-    );
+              to={`/users/${user._id}`}
+            >
+              <ListItemText
+                primary={`${user.first_name} ${user.last_name}`}
+              />
+            </ListItem>
+            <Divider />
+          </React.Fragment>
+        ))}
+      </List>
+    </div>
+  );
 }
 
 export default UserList;

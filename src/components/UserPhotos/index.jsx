@@ -1,49 +1,53 @@
-import React from "react";
-import { Typography, Card, CardContent, Divider } from "@mui/material"; 
+import React, { useEffect, useState } from "react";
+import { Typography, Card, CardContent } from "@mui/material";
 import { useParams, Link } from "react-router-dom";
-import models from "../../modelData/models"; 
 
-import "./styles.css";
+function UserPhotos() {
+  const { userId } = useParams();
+  const [photos, setPhotos] = useState([]);
 
-function UserPhotos () {
-    const {userId} = useParams();
-    const photos = models.photoOfUserModel(userId);
-    const user = models.userModel(userId);
-    return (
-      <>
-      {photos.map((photo)=>(
-        <React.Fragment key={photo._id}>
-          <Card>
-            <img
-              src={`src/images/${photo.file_name}`} 
-              alt={photo.file_name}
-              width="100%"
-            />
-            <CardContent>
-              <Typography variant="caption" display="inline">
-                {photo.date_time}
-              </Typography>
-              {photo.comments && photo.comments.map((c)=>(
-                <div key={c._id}>
-                  <Typography variant="caption" display="inline">
-                    {c.date_time}
-                  </Typography>
-                  <Typography variant="body1">
-                    <strong>
+  useEffect(() => {
+    fetch(`http://localhost:8081/api/photo/photosOfUser/${userId}`)
+      .then(res => res.json())
+      .then(data => setPhotos(data))
+      .catch(err => console.error(err));
+  }, [userId]);
+
+  return (
+    <>
+      {photos.map(photo => (
+        <Card key={photo._id}>
+          <img
+            src={`/images/${photo.file_name}`}
+            alt={photo.file_name}
+            width="100%"
+          />
+          <CardContent>
+            <Typography variant="caption">
+              {photo.date_time}
+            </Typography>
+
+            {photo.comments.map(c => (
+              <div key={c._id}>
+                <Typography variant="caption">
+                  {c.date_time}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>
                     <Link to={`/users/${c.user._id}`}>
-                     { c.user.first_name} {c.user.last_name}
+                      {c.user.first_name} {c.user.last_name}
                     </Link>
-                    </strong>
-                  :{c.comment}
-                  </Typography>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </React.Fragment>
+                  </strong>
+                  : {c.comment}
+                </Typography>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
       ))}
-      </>
-    )
+    </>
+  );
 }
 
 export default UserPhotos;
+

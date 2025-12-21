@@ -1,36 +1,43 @@
-import React from "react";
-import {Typography, Button, Divider, Card, CardContent} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Typography, Button } from "@mui/material";
+import { useParams, Link } from "react-router-dom";
 
-import "./styles.css";
-import {useParams, Link} from "react-router-dom";
-import models from "../../modelData/models";
-/**
- * Define UserDetail, a React component of Project 4.
- */
 function UserDetail() {
-    const {userId} = useParams();
-    const user = models.userModel(userId);
-    return (
-      <div>
-        <Typography variant="h4">
-          {user.first_name} {user.last_name}
-        </Typography>
-        <Typography variant="body1">
-          <strong>Location: </strong> {user.location}
-        </Typography>
-        <Typography variant="body1">
-          <strong>Occupation: </strong> {user.occupation}
-        </Typography>
-        <Typography variant="body1">
-          <strong>Description: </strong> {user.description}
-        </Typography>
-        <Button 
+  const { userId } = useParams();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetch(`http://localhost:8081/api/user/${userId}`)
+      .then(res => res.json())
+      .then(data => setUser(data))
+      .catch(err => console.error(err));
+  }, [userId]);
+
+  if (!user) return <div>Loading...</div>;
+
+  return (
+    <div>
+      <Typography variant="h4">
+        {user.first_name} {user.last_name}
+      </Typography>
+      <Typography>
+        <strong>Location:</strong> {user.location}
+      </Typography>
+      <Typography>
+        <strong>Occupation:</strong> {user.occupation}
+      </Typography>
+      <Typography>
+        <strong>Description:</strong> {user.description}
+      </Typography>
+      <Button
         variant="contained"
         component={Link}
         to={`/photos/${userId}`}
-        >View Photos</Button>
-      </div>
-    )
+      >
+        View Photos
+      </Button>
+    </div>
+  );
 }
 
 export default UserDetail;
