@@ -1,51 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Toolbar, Typography , Button} from "@mui/material";
 import { useLocation } from "react-router-dom";
 import "./styles.css";
 
-function TopBar() {
-  const location = useLocation();
-  const [contextText, setContextText] = useState("");
+function TopBar({ user, setUser }) {
 
-  useEffect(() => {
-    const pathParts = location.pathname.split("/");
-
-    // reset khi đổi trang
-    setContextText("");
-
-    if (pathParts.length >= 3) {
-      const pageType = pathParts[1];
-      const userId = pathParts[2];
-
-      fetch(`http://localhost:8081/api/user/${userId}`)
-        .then(res => res.json())
-        .then(user => {
-          if (!user || user.error) return;
-
-          const userName = `${user.first_name} ${user.last_name}`;
-
-          if (pageType === "users") {
-            setContextText(userName);
-          } else if (pageType === "photos") {
-            setContextText(`Photos of ${userName}`);
-          }
-        })
-        .catch(err => console.error(err));
-    }
-  }, [location.pathname]);
+  const handleLogout = async () => {
+    await fetch("http://localhost:8081/admin/logout", { method: "POST" });
+    setUser(null);
+  };
 
   return (
-    <AppBar className="topbar-appBar" position="absolute">
+    <AppBar position="absolute">
       <Toolbar sx={{ justifyContent: "space-between" }}>
-        <Typography variant="h5" color="inherit">
+        <Typography variant="h5">
           Nguyễn Văn Hùng
         </Typography>
-        <Typography variant="h5" color="inherit">
-          {contextText}
-        </Typography>
+
+        {user ? (
+          <>
+            <Typography variant="h6">
+              Hi {user.first_name}
+            </Typography>
+            <Button color="inherit" onClick={handleLogout}>
+              Logout
+            </Button>
+          </>
+        ) : (
+          <Typography variant="h6">
+            Please Login
+          </Typography>
+        )}
       </Toolbar>
     </AppBar>
   );
 }
-
 export default TopBar;

@@ -7,9 +7,22 @@ function UserDetail() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:8081/api/user/${userId}`)
-      .then(res => res.json())
-      .then(data => setUser(data))
+    fetch(`http://localhost:8081/api/user/${userId}`, {
+      credentials: "include"  
+    })
+      .then(res => {
+        if (res.status === 401) {
+          console.error("Not authenticated");
+          return null;
+        }
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (data) setUser(data);
+      })
       .catch(err => console.error(err));
   }, [userId]);
 

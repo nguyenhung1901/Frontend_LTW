@@ -8,31 +8,51 @@ import {
   Typography,
 } from "@mui/material";
 
-function UserList() {
+function UserList({ user }) {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8081/api/user/list")
-      .then(res => res.json())
-      .then(data => setUsers(data))
-      .catch(err => console.error(err));
-  }, []);
+    if (!user) {
+      setUsers([]);
+      return;
+    }
+
+    fetch("http://localhost:8081/api/user/list", {
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.status === 401) {
+          setUsers([]);
+          return null;
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (data) setUsers(data);
+      })
+      .catch((err) => console.error(err));
+  }, [user]); 
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div>
       <Typography variant="body1">
         User list
       </Typography>
+
       <List component="nav">
-        {users.map(user => (
-          <React.Fragment key={user._id}>
+        {users.map((u) => (
+          <React.Fragment key={u._id}>
             <ListItem
               button
               component={Link}
-              to={`/users/${user._id}`}
+              to={`/users/${u._id}`}
             >
               <ListItemText
-                primary={`${user.first_name} ${user.last_name}`}
+                primary={`${u.first_name} ${u.last_name}`}
               />
             </ListItem>
             <Divider />
@@ -44,3 +64,5 @@ function UserList() {
 }
 
 export default UserList;
+
+

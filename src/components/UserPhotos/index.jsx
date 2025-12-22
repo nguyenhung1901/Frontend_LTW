@@ -7,29 +7,42 @@ function UserPhotos() {
   const [photos, setPhotos] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:8081/api/photo/photosOfUser/${userId}`)
-      .then(res => res.json())
-      .then(data => setPhotos(data))
+    fetch(`http://localhost:8081/api/photo/photosOfUser/${userId}`, {
+      credentials: "include" 
+    })
+      .then(res => {
+        if (res.status === 401) {
+          console.error("Not authenticated");
+          return null;
+        }
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (data) setPhotos(data);
+      })
       .catch(err => console.error(err));
   }, [userId]);
 
   return (
     <>
       {photos.map(photo => (
-        <Card key={photo._id}>
+        <Card key={photo._id} style={{ marginBottom: "20px" }}>
           <img
             src={`/images/${photo.file_name}`}
             alt={photo.file_name}
-            width="100%"
+            style={{ width: "100%" }}
           />
           <CardContent>
-            <Typography variant="caption">
+            <Typography variant="caption" display="block">
               {photo.date_time}
             </Typography>
 
-            {photo.comments.map(c => (
-              <div key={c._id}>
-                <Typography variant="caption">
+            {photo.comments && photo.comments.map(c => (
+              <div key={c._id} style={{ marginTop: "10px" }}>
+                <Typography variant="caption" display="block">
                   {c.date_time}
                 </Typography>
                 <Typography variant="body1">
@@ -50,4 +63,5 @@ function UserPhotos() {
 }
 
 export default UserPhotos;
+
 
