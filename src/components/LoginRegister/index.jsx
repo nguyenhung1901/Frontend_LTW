@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Box, Tabs, Tab } from "@mui/material";
-
+import API_BASE_URL from "../../config/api";
 function LoginRegister({ setUser }) {
   const [tabValue, setTabValue] = useState(0);
 
@@ -20,7 +20,7 @@ function LoginRegister({ setUser }) {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://localhost:8081/admin/login", {
+      const res = await fetch(`${API_BASE_URL}/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include", 
@@ -58,7 +58,7 @@ function LoginRegister({ setUser }) {
       return;
     }
     try{
-      const res = await fetch("http://localhost:8081/admin/register",{
+      const res = await fetch(`${API_BASE_URL}/admin/register`,{
         method: "POST",
         headers:{"Content-Type":"application/json"},
         credentials: "include",

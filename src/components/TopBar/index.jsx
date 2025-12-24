@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { AppBar, Toolbar, Typography, Button, Box, Input } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import API_BASE_URL from "../../config/api";
 function TopBar({ user, setUser }) {
   const navigate = useNavigate();
   const [uploadError, setUploadError] = useState("");
 
   const handleLogout = async () => {
     try {
-      const res = await fetch("http://localhost:8081/admin/logout", {
+      const res = await fetch(`${API_BASE_URL}/admin/logout`, {
         method: "POST",
         credentials: "include"
       });
@@ -40,7 +40,7 @@ function TopBar({ user, setUser }) {
     formData.append("photo", file);
 
     try {
-      const res = await fetch("http://localhost:8081/api/photo/new", {
+      const res = await fetch(`${API_BASE_URL}/api/photo/new`, {
         method: "POST",
         credentials: "include",
         body: formData

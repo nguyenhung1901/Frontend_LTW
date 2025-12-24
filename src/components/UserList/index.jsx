@@ -7,7 +7,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-
+import API_BASE_URL from "../../config/api";
 function UserList({ user }) {
   const [users, setUsers] = useState([]);
 
@@ -17,7 +17,7 @@ function UserList({ user }) {
       return;
     }
 
-    fetch("http://localhost:8081/api/user/list", {
+    fetch(`${API_BASE_URL}/api/user/list`, {
       credentials: "include",
     })
       .then((res) => {

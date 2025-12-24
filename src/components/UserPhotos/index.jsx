@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Card, CardContent, TextField, Button, Box } from "@mui/material";
 import { useParams, Link } from "react-router-dom";
-
+import API_BASE_URL from "../../config/api";
 function UserPhotos() {
   const { userId } = useParams();
   const [photos, setPhotos] = useState([]);
-  const [commentTexts, setCommentTexts] = useState({}); // Lưu text của từng photo
+  const [commentTexts, setCommentTexts] = useState({}); 
 
   useEffect(() => {
     fetchPhotos();
   }, [userId]);
 
   const fetchPhotos = () => {
-    fetch(`http://localhost:8081/api/photo/photosOfUser/${userId}`, {
+    fetch(`${API_BASE_URL}/api/photo/photosOfUser/${userId}`, {
       credentials: "include"
     })
       .then(res => {
@@ -41,7 +41,7 @@ function UserPhotos() {
     }
 
     try {
-      const res = await fetch(`http://localhost:8081/api/comment/${photoId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/comment/${photoId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -70,7 +70,7 @@ function UserPhotos() {
       {photos.map(photo => (
         <Card key={photo._id} style={{ marginBottom: "20px" }}>
           <img
-            src={`http://localhost:8081/images/${photo.file_name}`}
+            src={`${API_BASE_URL}/images/${photo.file_name}`}
             alt={photo.file_name}
             style={{ width: "100%" }}
           />

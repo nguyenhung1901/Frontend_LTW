@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Button } from "@mui/material";
 import { useParams, Link } from "react-router-dom";
-
+import API_BASE_URL from "../../config/api";
 function UserDetail() {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:8081/api/user/${userId}`, {
+    fetch(`${API_BASE_URL}/api/user/${userId}`, {
       credentials: "include"  
     })
       .then(res => {
